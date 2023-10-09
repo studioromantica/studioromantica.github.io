@@ -3,10 +3,10 @@ const Game = {
 
 	init: function() {
 
+		this.addCanvas();
+
 		this.AudioContext = false;
 		this.bullits = [];
-		this.canvas = document.getElementById("canvas");
-		this.ctx = this.canvas.getContext("2d");
 		this.fps = 0;
 		this.debug = 0;
 		this.hasAudio = false;
@@ -51,16 +51,36 @@ const Game = {
 			width: window.innerWidth
 		};
 
-		this.canvas.setAttribute( "height", this.world.height );
-		this.canvas.setAttribute( "width", this.world.width );
-
 		this.player.x = ( this.canvas.width / 2 ) - ( this.player.width / 2 );
 		this.player.y = this.canvas.height - this.player.height - 20;
 
+		this.addStyleSheet();
 		this.initStars();
 		this.addEventListeners();
 
 		window.requestAnimationFrame( this.loop );
+	},
+
+	addCanvas: function() {
+
+		this.canvas = document.createElement("canvas");
+
+		this.canvas.setAttribute( "height", window.innerHeight );
+		this.canvas.setAttribute( "width", window.innerWidth );
+
+		document.body.appendChild( this.canvas );
+
+		this.ctx = this.canvas.getContext("2d");
+	},
+
+	addStyleSheet: function() {
+
+		link = document.createElement( "link" );
+
+		link.setAttribute( "rel", "stylesheet" );
+		link.setAttribute( "href", "./assets/css/index.css" );
+
+		document.head.appendChild(link);
 	},
 
 	addEventListeners: function() {
@@ -139,7 +159,7 @@ const Game = {
 
 				this.sounds[ key ].buffer = false;
 
-				window.fetch( `./starfield/assets/audio/${value.src}` )
+				window.fetch( `./assets/audio/${value.src}` )
 					.then( function( response ) { return response.arrayBuffer(); } )
 					.then( function( arrayBuffer ) {
 						Game.AudioContext.decodeAudioData(
@@ -370,7 +390,3 @@ const Game = {
 		return Math.random() * ( max - min + 1 ) + min;
 	},
 };
-
-document.addEventListener( "DOMContentLoaded", function( event ) {
-	Game.init();
-});
