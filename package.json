@@ -1,0 +1,22 @@
+{
+  "name": "studioromantica",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "serve": "npx serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/studioromantica/studioromantica.github.io.git"
+  },
+  "author": "Studio Romantica",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/studioromantica/spacer/issues"
+  },
+  "homepage": "https://github.com/studioromantica/spacer",
+  "dependencies": {
+    "serve": "^14.2.1"
+  }
+}
