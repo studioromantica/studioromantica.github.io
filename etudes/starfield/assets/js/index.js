@@ -31,8 +31,9 @@ const Game = {
 				},
 			},
 			height: 20,
+			sprite: [0, 0, 36, 20],
 			speed: 500,
-			width: 100,
+			width: 36,
 			x: 0,
 			y: 0
 		};
@@ -54,11 +55,16 @@ const Game = {
 		this.player.x = ( this.canvas.width / 2 ) - ( this.player.width / 2 );
 		this.player.y = this.canvas.height - this.player.height - 20;
 
+		this.sprites = new Image();
+		this.sprites.src = './assets/images/galaxus/sprites.png';
+
 		this.addStyleSheet();
 		this.initStars();
 		this.addEventListeners();
 
-		window.requestAnimationFrame( this.loop );
+		this.sprites.onload = function() {
+			window.requestAnimationFrame( Game.loop );
+		};
 	},
 
 	addCanvas: function() {
@@ -259,14 +265,23 @@ const Game = {
 
 		this.bullits.forEach( function( bullit, index ) {
 
-			Game.ctx.fillStyle = bullit.color;
-			Game.ctx.fillRect( bullit.x, bullit.y, bullit.width, bullit.height );
-
 			bullit.y = bullit.y - bullit.speed;
 
-			if ( bullit.y < 0 - Game.world.padding ) {
+			if ( bullit.y < 0 - bullit.height ) {
 				Game.bullits.splice( index, 1 );
 			}
+
+			Game.ctx.drawImage(
+				Game.sprites,
+				bullit.sprite[0],
+				bullit.sprite[1],
+				bullit.sprite[2],
+				bullit.sprite[3],
+				bullit.x,
+				bullit.y,
+				bullit.width,
+				bullit.height
+			);
 		} );
 	},
 
@@ -293,8 +308,18 @@ const Game = {
 
 	drawPlayer: function() {
 
-		this.ctx.fillStyle = this.player.color;
-		this.ctx.fillRect( this.player.x, this.player.y, this.player.width, this.player.height );
+		// drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+		this.ctx.drawImage(
+			Game.sprites,
+			Game.player.sprite[0],
+			Game.player.sprite[1],
+			Game.player.sprite[2],
+			Game.player.sprite[3],
+			Game.player.x,
+			Game.player.y,
+			Game.player.width,
+			Game.player.height
+		);
 	},
 
 	initStars: function() {
@@ -350,15 +375,16 @@ const Game = {
 
 		const bullit = {
 			color: "#ffff00",
-			height: 10,
-			speed: 20,
-			width: 10,
+			height: 20,
+			speed: 12,
+			sprite: [40, 0, 4, 20],
+			width: 4,
 			x: 0,
 			y: 0
 		};
 
 		bullit.x = this.player.x + ( this.player.width / 2 ) - bullit.width / 2;
-		bullit.y = this.player.y - bullit.height;
+		bullit.y = this.player.y;
 
 		this.bullits.push( bullit );
 
