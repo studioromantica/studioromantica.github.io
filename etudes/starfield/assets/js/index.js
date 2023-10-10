@@ -65,6 +65,8 @@ const Game = {
 		this.sprites.onload = function() {
 			window.requestAnimationFrame( Game.loop );
 		};
+
+		this.instructions();
 	},
 
 	addCanvas: function() {
@@ -415,4 +417,10 @@ const Game = {
 		// The maximum is inclusive and the minimum is inclusive.
 		return Math.random() * ( max - min + 1 ) + min;
 	},
+
+	instructions: function() {
+		console.log( 'Move: Arrow Keys' );
+		console.log( 'Shoot: Space' );
+		console.log( 'Debug: Game.debug = true' );
+	}
 };
