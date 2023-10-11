@@ -14,7 +14,10 @@ const Game = {
 		this.oldTimeStamp = 0;
 		this.player = {
 			color: "#fff",
-			direction: 0,
+			direction: {
+				x: 0,
+				y: 0
+			},
 			gun: {
 				fire: function() {
 					if ( this.nextShotIn === 0 ) {
@@ -32,10 +35,14 @@ const Game = {
 			},
 			height: 20,
 			sprite: [0, 0, 36, 20],
-			speed: 500,
+			speed: {
+				x: 500,
+				y: 250
+			},
 			width: 36,
 			x: 0,
-			y: 0
+			y: 0,
+			yReach: 200,
 		};
 		this.sounds = {
 			shoot: {
@@ -43,6 +50,7 @@ const Game = {
 			}
 		};
 		this.stars = [];
+		this.starsSpeedMultiplier = 1;
 		this.secondsPassed = 0;
 		this.world = {
 			backgroundColor: '#000',
@@ -110,12 +118,22 @@ const Game = {
 
 			// Left arrow.
 			if ( event.keyCode === 37 ) {
-				Game.player.direction = -1;
+				Game.player.direction.x = -1;
 			}
 
 			// Right arrow.
 			if ( event.keyCode === 39 ) {
-				Game.player.direction = 1;
+				Game.player.direction.x = 1;
+			}
+
+			// Up arrow.
+			if ( event.keyCode === 38 ) {
+				Game.player.direction.y = -1;
+			}
+
+			// Down arrow.
+			if ( event.keyCode === 40 ) {
+				Game.player.direction.y = 1;
 			}
 		};
 
@@ -128,7 +146,12 @@ const Game = {
 
 			// Left or right arrow.
 			if ( event.keyCode === 37 || event.keyCode === 39 ) {
-				Game.player.direction = 0;
+				Game.player.direction.x = 0;
+			}
+
+			// Up or down arrow.
+			if ( event.keyCode === 38 || event.keyCode === 40 ) {
+				Game.player.direction.y = 0;
 			}
 		};
 
@@ -206,17 +229,21 @@ const Game = {
 
 	updatePlayer: function() {
 
-		const movement = this.player.direction * this.player.speed;
+		const movementX = this.player.direction.x * this.player.speed.x;
+		const movementY = this.player.direction.y * this.player.speed.y;
 
-		this.player.x += ( movement * Game.secondsPassed || 0 );
+		const xMin = this.world.padding;
+		const xMax = this.world.width - this.player.width - this.world.padding;
+		const yMax = this.world.height - this.player.width - this.world.padding;
+		const yMin = Math.floor( Math.max( yMax - this.player.yReach, this.world.height / 2 ) );
 
-		if ( this.player.x <= this.world.padding ) {
-			this.player.x = this.world.padding;
-		}
+		this.player.x += ( movementX * Game.secondsPassed || 0 );
+		this.player.y += ( movementY * Game.secondsPassed || 0 );
 
-		if ( this.player.x >= this.world.width - this.player.width - this.world.padding ) {
-			this.player.x = this.world.width - this.player.width - this.world.padding;
-		}
+		this.player.x = Math.min( Math.max( parseInt( this.player.x ), xMin ), xMax );
+		this.player.y = Math.min( Math.max( parseInt( this.player.y ), yMin ), yMax );
+
+		this.starsSpeedMultiplier = ( ( this.player.y - yMax ) * -0.01 ) + 1;
 
 		this.player.gun.update();
 
@@ -241,7 +268,7 @@ const Game = {
 
 		this.stars.forEach( function( star, index ) {
 
-			star.y += ( star.speed * Game.secondsPassed || 0 );
+			star.y += ( ( star.speed * Game.starsSpeedMultiplier ) * Game.secondsPassed || 0 );
 
 			if ( star.y > Game.world.height ) {
 				star.x = Math.floor( Math.random() * Game.world.width );
