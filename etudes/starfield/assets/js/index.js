@@ -246,6 +246,10 @@ const Game = {
 		this.player.x = Math.min( Math.max( parseInt( this.player.x ), xMin ), xMax );
 		this.player.y = Math.min( Math.max( parseInt( this.player.y ), yMin ), yMax );
 
+		if ( 0 === movementY && this.player.y < yMax ) {
+			this.player.y = Math.min( parseInt( this.player.y ) + 2, yMax );
+		}
+
 		this.starsSpeedMultiplier = ( ( this.player.y - yMax ) * -0.01 ) + 1;
 
 		this.player.gun.update();
