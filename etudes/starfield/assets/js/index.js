@@ -34,7 +34,10 @@ const Game = {
 				},
 			},
 			height: 20,
-			sprite: [0, 0, 36, 20],
+			sprites: {
+				hull: [0, 0, 36, 20],
+				exhaust: [48, 0, 12, 12]
+			},
 			speed: {
 				x: 500,
 				y: 250
@@ -340,15 +343,30 @@ const Game = {
 		// drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
 		this.ctx.drawImage(
 			Game.sprites,
-			Game.player.sprite[0],
-			Game.player.sprite[1],
-			Game.player.sprite[2],
-			Game.player.sprite[3],
+			Game.player.sprites.hull[0],
+			Game.player.sprites.hull[1],
+			Game.player.sprites.hull[2],
+			Game.player.sprites.hull[3],
 			Game.player.x,
 			Game.player.y,
 			Game.player.width,
 			Game.player.height
 		);
+
+		if ( Game.player.direction.y < 0 ) {
+
+			this.ctx.drawImage(
+				Game.sprites,
+				Game.player.sprites.exhaust[0],
+				Game.player.sprites.exhaust[1],
+				Game.player.sprites.exhaust[2],
+				Game.player.sprites.exhaust[3],
+				Game.player.x + ( Game.player.width / 2 ) - ( Game.player.sprites.exhaust[2] / 2 ),
+				Game.player.y + Game.player.height,
+				Game.player.sprites.exhaust[2],
+				Game.player.sprites.exhaust[3]
+			);
+		}
 	},
 
 	initStars: function() {
