@@ -45,7 +45,7 @@ const Game = {
 			width: 36,
 			x: 0,
 			y: 0,
-			yReach: 200,
+			yReach: 300,
 		};
 		this.sounds = {
 			shoot: {
