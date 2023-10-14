@@ -115,27 +115,27 @@ const Game = {
 			Game.canvas.style.cursor = "none";
 
 			// Space.
-			if ( event.keyCode === 32 ) {
+			if ( 32 === event.keyCode ) {
 				Game.player.shooting = 1;
 			}
 
-			// Left arrow.
-			if ( event.keyCode === 37 ) {
+			// Left arrow or A.
+			if ( [ 37, 65 ].includes( event.keyCode ) ) {
 				Game.player.direction.x = -1;
 			}
 
-			// Right arrow.
-			if ( event.keyCode === 39 ) {
+			// Right arrow or D.
+			if ( [ 39, 68 ].includes( event.keyCode ) ) {
 				Game.player.direction.x = 1;
 			}
 
-			// Up arrow.
-			if ( event.keyCode === 38 ) {
+			// Up arrow or W.
+			if ( [ 38, 87 ].includes( event.keyCode ) ) {
 				Game.player.direction.y = -1;
 			}
 
-			// Down arrow.
-			if ( event.keyCode === 40 ) {
+			// Down arrow or S.
+			if ( [ 40, 83 ].includes( event.keyCode ) ) {
 				Game.player.direction.y = 2;
 			}
 		};
@@ -143,17 +143,17 @@ const Game = {
 		document.body.onkeyup = function( event ) {
 
 			// Space.
-			if ( event.keyCode === 32 ) {
+			if ( 32 === event.keyCode ) {
 				Game.player.shooting = 0;
 			}
 
-			// Left or right arrow.
-			if ( event.keyCode === 37 || event.keyCode === 39 ) {
+			// Left or right arrow, A or D.
+			if ( [ 37, 39, 65, 68 ].includes( event.keyCode ) ) {
 				Game.player.direction.x = 0;
 			}
 
-			// Up or down arrow.
-			if ( event.keyCode === 38 || event.keyCode === 40 ) {
+			// Up or down arrow, W or S.
+			if ( [ 38, 40, 83, 87 ].includes( event.keyCode ) ) {
 				Game.player.direction.y = 0;
 			}
 		};
