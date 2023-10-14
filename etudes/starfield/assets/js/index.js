@@ -136,7 +136,7 @@ const Game = {
 
 			// Down arrow.
 			if ( event.keyCode === 40 ) {
-				Game.player.direction.y = 1;
+				Game.player.direction.y = 2;
 			}
 		};
 
