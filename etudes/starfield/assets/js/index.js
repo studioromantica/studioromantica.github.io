@@ -109,12 +109,46 @@ const Game = {
 
 	addEventListeners: function() {
 
-		document.body.onmousemove = function( event ) {
+
+		document.body.addEventListener( 'touchend', function( event ) {
+
+			event.preventDefault();
+			Game.touch.isTouching = false;
+
+		}, false );
+
+		document.body.addEventListener( 'touchcancel', function( event ) {
+
+			event.preventDefault();
+			Game.touch.isTouching = false;
+
+		}, false );
+
+		document.body.addEventListener( 'mousemove', function( event ) {
 
 			Game.canvas.style.cursor = "default";
-		};
+		});
 
-		document.body.onkeydown = function( event ) {
+		document.body.addEventListener( 'mousedown', function( event ) {
+
+			Game.player.shooting = 1;
+		});
+
+		document.body.addEventListener( 'mouseup', function( event ) {
+
+			Game.player.shooting = 0;
+		});
+
+		window.addEventListener( 'blur', function() {
+
+			Game.player.shooting = 0;
+		});
+
+		this.canvas.addEventListener( 'contextmenu', function() {
+			Game.player.shooting = 0;
+		});
+
+		document.body.addEventListener( 'keydown', function( event ) {
 
 			Game.createAudioContext();
 			Game.canvas.style.cursor = "none";
@@ -143,9 +177,11 @@ const Game = {
 			if ( [ 40, 83 ].includes( event.keyCode ) ) {
 				Game.player.direction.y = 2;
 			}
-		};
 
-		document.body.onkeyup = function( event ) {
+			event.preventDefault();
+		});
+
+		document.body.addEventListener( 'keyup', function( event ) {
 
 			// Space.
 			if ( 32 === event.keyCode ) {
@@ -161,13 +197,15 @@ const Game = {
 			if ( [ 38, 40, 83, 87 ].includes( event.keyCode ) ) {
 				Game.player.direction.y = 0;
 			}
-		};
 
-		window.onblur = function() {
+			event.preventDefault();
+		});
+
+		window.addEventListener( 'blur', function() {
 			Game.player.shooting = 0;
-		};
+		});
 
-		window.onresize = function( event ) {
+		window.addEventListener( 'resize', function( event ) {
 
 			Game.world.height = this.innerHeight;
 			Game.world.width = this.innerWidth;
@@ -177,7 +215,7 @@ const Game = {
 
 			Game.player.x = ( Game.canvas.width / 2 ) - ( Game.player.width / 2 )  ;
 			Game.player.y = Game.canvas.height - Game.player.height - 20;
-		};
+		});
 	},
 
 	createAudioContext: function() {
