@@ -60,6 +60,16 @@ const Game = {
 		this.stars = [];
 		this.starsSpeedMultiplier = 1;
 		this.secondsPassed = 0;
+		this.touch = {
+			isTouching: false,
+			ui: {
+				lineWidth: 4,
+				strokeStyle: 'rgba(255,255,255,0.1)',
+				radius: Math.min( 120, ( this.canvas.width / 4 ) )
+			},
+			x: 0,
+			y: 0
+		},
 		this.world = {
 			backgroundColor: '#000',
 			height: window.innerHeight,
@@ -109,6 +119,56 @@ const Game = {
 
 	addEventListeners: function() {
 
+		document.body.addEventListener( 'touchstart', function( event ) {
+
+			event.preventDefault();
+
+			if ( event.targetTouches.length ) {
+
+				Game.touch.isTouching = true;
+
+				Game.touch.x = event.targetTouches[0].pageX;
+				Game.touch.y = event.targetTouches[0].pageY;
+			}
+
+		}, false );
+
+		document.body.addEventListener( 'touchmove', function( event ) {
+
+			if ( event.targetTouches.length ) {
+
+				const touch = event.targetTouches[0];
+
+				const range = [
+					Game.touch.x - Game.touch.ui.radius,
+					Game.touch.x + Game.touch.ui.radius,
+					Game.touch.y - Game.touch.ui.radius,
+					Game.touch.y + Game.touch.ui.radius,
+				];
+
+				if ( touch.pageX <= range[0] ) {
+					Game.player.x = Game.world.padding;
+				} else if ( touch.pageX >= range[1] ) {
+					Game.player.x = Game.canvas.width - Game.world.padding;
+				} else {
+					let multiplier = ( touch.pageX - range[0] ) / ( ( Game.touch.ui.radius * 2 ) / 100 ) / 100;
+					Game.player.x = multiplier * Game.canvas.width;
+				}
+
+				if ( touch.pageY <= range[2] ) {
+					Game.player.y = Game.canvas.height - Game.world.padding - Game.player.yReach;
+				} else if ( touch.pageY >= range[3] ) {
+					Game.player.y = Game.canvas.height - Game.world.padding - Game.player.height;
+				} else {
+					let newY = Game.canvas.height - Game.world.padding - Game.player.yReach;
+					let multiplier = ( touch.pageY - range[2] ) / ( ( Game.touch.ui.radius * 2 ) / 100 ) / 100;;
+					newY = newY + ( multiplier * Game.player.yReach );
+
+					Game.player.y = newY;
+				}
+			}
+
+		}, false );
 
 		document.body.addEventListener( 'touchend', function( event ) {
 
@@ -289,7 +349,7 @@ const Game = {
 		this.player.x = Math.min( Math.max( parseInt( this.player.x ), xMin ), xMax );
 		this.player.y = Math.min( Math.max( parseInt( this.player.y ), yMin ), yMax );
 
-		if ( 0 === movementY && this.player.y < yMax ) {
+		if ( ! this.touch.isTouching && 0 === movementY && this.player.y < yMax ) {
 			this.player.y = Math.min( parseInt( this.player.y ) + 2, yMax );
 		}
 
@@ -335,6 +395,26 @@ const Game = {
 		} );
 	},
 
+	drawTouchUI: function() {
+
+		if ( ! this.touch.isTouching ) {
+			return;
+		}
+
+		this.ctx.strokeStyle = this.touch.ui.strokeStyle;
+		this.ctx.lineWidth = this.touch.ui.lineWidth;
+
+		this.ctx.beginPath();
+		this.ctx.arc(
+			this.touch.x,
+			this.touch.y,
+			this.touch.ui.radius,
+			0,
+			2 * Math.PI
+		);
+		this.ctx.stroke();
+	},
+
 	draw: function() {
 
 		this.ctx.fillStyle = this.world.backgroundColor;
@@ -346,6 +426,7 @@ const Game = {
 		this.drawBullits();
 		this.drawPlayer();
 		this.drawDebug();
+		this.drawTouchUI();
 	},
 
 	drawBullits: function() {
