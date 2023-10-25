@@ -18,6 +18,11 @@ const Game = {
 				x: 0,
 				y: 0
 			},
+			exhaust: {
+				active: false,
+				x: 0,
+				y: 0
+			},
 			gun: {
 				fire: function() {
 					if ( this.nextShotIn === 0 ) {
@@ -252,6 +257,14 @@ const Game = {
 
 		this.starsSpeedMultiplier = ( ( this.player.y - yMax ) * -0.01 ) + 1;
 
+		this.player.exhaust.active = false;
+
+		if ( this.player.direction.y < 0 || this.touch.isTouching ) {
+			this.player.exhaust.active = true;
+			this.player.exhaust.x = this.player.x + ( this.player.width / 2 ) - ( this.player.sprites.exhaust[2] / 2 );
+			this.player.exhaust.y = this.player.y + this.player.height - Math.round( Math.random() ) * 2;
+		}
+
 		this.player.gun.update();
 
 		if ( this.player.shooting ) {
@@ -344,6 +357,21 @@ const Game = {
 
 	drawPlayer: function() {
 
+		if ( Game.player.exhaust.active ) {
+
+			this.ctx.drawImage(
+				Game.sprites,
+				Game.player.sprites.exhaust[0],
+				Game.player.sprites.exhaust[1],
+				Game.player.sprites.exhaust[2],
+				Game.player.sprites.exhaust[3],
+				Game.player.exhaust.x,
+				Game.player.exhaust.y,
+				Game.player.sprites.exhaust[2],
+				Game.player.sprites.exhaust[3]
+			);
+		}
+
 		// drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
 		this.ctx.drawImage(
 			Game.sprites,
@@ -356,21 +384,6 @@ const Game = {
 			Game.player.width,
 			Game.player.height
 		);
-
-		if ( Game.player.direction.y < 0 ) {
-
-			this.ctx.drawImage(
-				Game.sprites,
-				Game.player.sprites.exhaust[0],
-				Game.player.sprites.exhaust[1],
-				Game.player.sprites.exhaust[2],
-				Game.player.sprites.exhaust[3],
-				Game.player.x + ( Game.player.width / 2 ) - ( Game.player.sprites.exhaust[2] / 2 ),
-				Game.player.y + Game.player.height,
-				Game.player.sprites.exhaust[2],
-				Game.player.sprites.exhaust[3]
-			);
-		}
 	},
 
 	initStars: function() {
