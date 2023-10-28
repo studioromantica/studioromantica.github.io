@@ -161,7 +161,7 @@ const Game = {
 					Game.player.y = Game.canvas.height - Game.world.padding - Game.player.height;
 				} else {
 					let newY = Game.canvas.height - Game.world.padding - Game.player.yReach;
-					let multiplier = ( touch.pageY - range[2] ) / ( ( Game.touch.ui.radius * 2 ) / 100 ) / 100;;
+					let multiplier = ( touch.pageY - range[2] ) / ( ( Game.touch.ui.radius * 2 ) / 100 ) / 100;
 					newY = newY + ( multiplier * Game.player.yReach );
 
 					Game.player.y = newY;
