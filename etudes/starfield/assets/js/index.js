@@ -69,7 +69,7 @@ const Game = {
 			},
 			x: 0,
 			y: 0
-		},
+		};
 		this.world = {
 			backgroundColor: '#000',
 			height: window.innerHeight,
