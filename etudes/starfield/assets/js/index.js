@@ -600,8 +600,26 @@ const Game = {
 	},
 
 	instructions: function() {
-		console.log( 'Move: Arrow Keys' );
-		console.log( 'Shoot: Space' );
-		console.log( 'Debug: Game.debug = true' );
+
+		console.log(
+			'',
+			'┌─────────────────────────────┐',
+			'\n',
+			'│                             │',
+			'\n',
+			'│  Starfield                  │',
+			'\n',
+			'│                             │',
+			'\n',
+			'│  Move  : Arrow Keys, WASD   │',
+			'\n',
+			'│  Shoot : Space              │',
+			'\n',
+			'│  Debug : Game.debug = true  │',
+			'\n',
+			'│                             │',
+			'\n',
+			'└─────────────────────────────┘'
+		);
 	}
 };
